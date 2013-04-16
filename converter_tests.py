@@ -1,4 +1,4 @@
-#  converter.py
+# !/usr/bin/env python
 #  converter_tests.py
 #  python-lenght-converter
 #  
@@ -8,9 +8,7 @@
 
 import unittest
 import converter
-from converter_meter import MeterConverter
-from converter_yard import YardConverter
-
+from unit_converters import MeterConverter, YardConverter, InchConverter
 class ConverterTestCase(unittest.TestCase):    
     #Meter converter tests
     def test_meter_convert_to_meter(self):
@@ -61,6 +59,32 @@ class ConverterTestCase(unittest.TestCase):
         expected_converted_value = 2.1872266
         converted_value = unit_converter.from_meter(value_to_convert)
         self.assertAlmostEqual(converted_value, expected_converted_value, places=4)
+    
+    #inche converter tests
+    def test_inch_convert_to_meter(self):
+        """
+        given a inch converter
+        when convert 3 inches into meters
+        then I get 0.9144 (inches)
+        """
+        unit_converter = InchConverter()
+        value_to_convert = 3
+        expected_converted_value = 0.0762 
+        converted_value = unit_converter.to_meter(value_to_convert)
+        self.assertAlmostEqual(converted_value, expected_converted_value, places=4)
+
+    def test_inch_convert_from_meter(self):
+        """
+        given a inch converter
+        when get inches from 3 meters
+        then I get 118.110236 (inches)
+        """
+        unit_converter = InchConverter()
+        value_to_convert = 3
+        expected_converted_value = 118.110236
+        converted_value = unit_converter.from_meter(value_to_convert)
+        self.assertAlmostEqual(converted_value, expected_converted_value, places=4)
+        
         
 if __name__ == '__main__':
     unittest.main()

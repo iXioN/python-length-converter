@@ -22,27 +22,8 @@ After that we just have to convert meter in desired unit
 
 """
 import sys
-
-class BaseUnitConverter(object):
-    """A base unit converter class"""
-    short_unit = ""
-    full_unit = short_unit #default full_unit = short_unit, implementation can override 
-    convert_ratio = 1 #the convert ratio to meter
-    
-    def to_meter(self, value):
-        """
-        the method to call to transform a unity value into meter
-        always return a meter value 
-        """
-        raise NotImplementedError
-        
-    def from_meter(self, value):
-        """
-        the method to call to get the unity value from meter value
-        always return a unit value
-        """
-        raise NotImplementedError
-        
+from unit_converters import MeterConverter, YardConverter, InchConverter
+               
 class Converter(object):
     """
     a class that convert lenght units
@@ -51,9 +32,6 @@ class Converter(object):
         """value is a value to convert like 3m or 6.5yd"""
         super(Converter, self).__init__(value)
         self.value_to_convert = value
-        
-
-
 
 if __name__ == "__main__":
     try:
