@@ -45,9 +45,9 @@ class ConverterTestCase(unittest.TestCase):
 
     def test_value_convertion_yard_to_inche(self):
         """
-        given a converter with the 3 unit converters registered and 3 yards set as value
+        given a converter with the 4 unit converters registered and 3 yards set as value
         when I get converted value in inches
-        then I get 108 inches
+        then I get 144 inches
         """
         converter_instance = converter.Converter()
         converter_instance.set_value(4, 'yd')
@@ -55,6 +55,30 @@ class ConverterTestCase(unittest.TestCase):
         result = converter_instance.convert_to_unit('in')
         self.assertAlmostEqual(result, 144, places=4)
         
+    def test_value_convertion_yard_to_inche_as_string(self):
+        """
+        given a converter with the 3 unit converters registered and 3 yards set as value
+        when I get converted value in meters with the as_string flag
+        then I get litteraly "112.98 m" 
+        """
+        converter_instance = converter.Converter()
+        converter_instance.set_value(123.56, 'yd')
+        
+        result = converter_instance.convert_to_unit('m', as_string=True)
+        self.assertEquals(result, "112.98 m")
     
+    def test_value_convertion_yard_to_feet(self):
+        """
+        given a converter with the 3 unit converters registered and 3 yards set as value
+        when I get converted value in feets
+        then I get an UnitConvertNotFound exception
+        """
+        converter_instance = converter.Converter()
+        converter_instance.set_value(23, 'yd')
+        
+        with self.assertRaises(converter.UnitConvertNotFound):
+         converter_instance.convert_to_unit('ft')
+         
+
         
     

@@ -22,6 +22,9 @@ After that we just have to convert meter in desired unit
 
 """
 import sys
+import re
+from optparse import OptionParser
+
 from unit_converters import MeterConverter, YardConverter, InchConverter
 
 class ConverterException(Exception):
@@ -93,14 +96,40 @@ class Converter(object):
         if unit_converter:
             result = unit_converter.from_meter(self.intial_lenght)
             if as_string:
-                return "%.2f %s" % (result, short_unit_name)
+                return "%g %s" % (result, short_unit_name)
             return result
         return None
 
+PARSE_INPUT_PATTERN = '([-+]?[0-9]*\.?[0-9]*)([a-z]*)'
 if __name__ == "__main__":
     try:
-        sys.argv[1:]
-        import ipdb
-        ipdb.set_trace()
+        #parse the options
+        parser = OptionParser(usage="usage: %prog filename",
+            version="%prog 0.1")
+        parser.add_option("-v", "--value", dest="value",
+            help="the value to convert woth unit ex: '2.5yd'", default="")
+        parser.add_option("-u", "--unit", dest="trg_unit",
+            help="the target unit ex: 'm'", default="m")
+        parser.add_option("-t", "--tidy", dest="tidy", action="store_true",
+            help="tidy the converted output", default=False)
+            
+        (options, args) = parser.parse_args()
+        original_value_to_convert = options.value
+        target_unit = options.trg_unit
+        tidy = options.tidy
+        
+        #create a converter instance
+        converter = Converter()
+        #parse the original value to get the number and the original unit
+        m = re.match(PARSE_INPUT_PATTERN, original_value_to_convert)
+        original_lenght = float(m.group(1)) 
+        original_unit = m.group(2)
+        
+        #set the value in the convert 
+        converter.set_value(original_lenght, original_unit)
+        
+        #then print the value 
+        print converter.convert_to_unit(target_unit, as_string=tidy)
+        
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
