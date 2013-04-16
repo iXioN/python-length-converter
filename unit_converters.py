@@ -33,6 +33,7 @@ class MeterConverter(BaseUnitConverter):
     this is the simplest convert because we use meter as base unit 
     """
     short_unit = "m"
+    full_unit = "meter"
     convert_ratio = 1    
     
     
@@ -40,8 +41,9 @@ class YardConverter(BaseUnitConverter):
     """
     The yard converter
     """
-    short_unit = "y"
-    convert_ratio = 1.0936
+    short_unit = "yd"
+    full_unit = "yard"
+    convert_ratio = 1.0936133
 
 
 class InchConverter(BaseUnitConverter):
@@ -49,4 +51,5 @@ class InchConverter(BaseUnitConverter):
     The inch converter
     """
     short_unit = "in"
+    full_unit = "inche"    
     convert_ratio = 39.3700787

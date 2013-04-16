@@ -1,5 +1,5 @@
 # !/usr/bin/env python
-#  converter_tests.py
+#  unit_converter_tests.py
 #  python-lenght-converter
 #  
 #  Created by Antonin Lacombe on 2013-04-16.
@@ -7,9 +7,8 @@
 # 
 
 import unittest
-import converter
 from unit_converters import MeterConverter, YardConverter, InchConverter
-class ConverterTestCase(unittest.TestCase):    
+class UnitConverterTestCase(unittest.TestCase):    
     #Meter converter tests
     def test_meter_convert_to_meter(self):
         """
@@ -84,7 +83,3 @@ class ConverterTestCase(unittest.TestCase):
         expected_converted_value = 118.110236
         converted_value = unit_converter.from_meter(value_to_convert)
         self.assertAlmostEqual(converted_value, expected_converted_value, places=4)
-        
-        
-if __name__ == '__main__':
-    unittest.main()
