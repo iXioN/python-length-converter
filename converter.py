@@ -1,6 +1,6 @@
 # !/usr/bin/env python
 #  converter.py
-#  python-lenght-converter
+#  python-length-converter
 #  
 #  Created by Antonin Lacombe on 2013-04-16.
 #  Copyright 2013 Antonin Lacombe. All rights reserved.
@@ -8,11 +8,11 @@
 
 """
 The idea of the converter is:
-    we register unit converter instance 
+    we register unit converter instance on converter init
     we convert the input value in meter
     then we can convert this value in each other unit
     
-we will use the meter as 'reference' because it's the SI lenght unit.
+we will use the meter as 'reference' because it's the SI length unit.
 
 Unit converter objects have simple interface to convert their unit in meter and convert meter in their unit
 
@@ -23,7 +23,10 @@ After that we just have to convert meter in desired unit
 """
 import sys
 import re
+import decimal
 from optparse import OptionParser
+
+PARSE_INPUT_PATTERN = re.compile('([-+]?[0-9]*\.?[0-9]*)([a-z]*)')
 
 from unit_converters import MeterConverter, YardConverter, InchConverter
 
@@ -31,19 +34,11 @@ class ConverterException(Exception):
     pass
 class UnitConvertNotFound(ConverterException):
     pass
-   
+
 class Converter(object):
     """
-    a class that convert lenght units
-    
-    usage:
-        >>>converter = converter()
-        >>>converter.set_value('3.45', 'yd')
-        >>>converter.convert_to_unit('m')
-        3.15468
-        >>>converter.convert_to_unit('feet')
-        None #unsupported unit
-        
+    a class that convert length units
+    for the how to use read the README
     """
     def __init__(self):
         super(Converter, self).__init__()
@@ -56,8 +51,8 @@ class Converter(object):
         #load the unit_converters objects into the unit_converters property
         self.unit_converters = [unit_cnvrtr_cls() for unit_cnvrtr_cls in unit_converters_class]
         
-        #the the intial lenght to convert, always stored in meter
-        self.intial_lenght = None
+        #the the intial length to convert, always stored in meter
+        self.intial_length = None
         self.intial_unit = None
         
     def _get_unit_converter(self, short_unit_name):
@@ -73,34 +68,50 @@ class Converter(object):
             raise UnitConvertNotFound()
         return self.unit_converter_cache[short_unit_name]
             
-    def set_value(self, lenght, unit):
+    def set_value(self, length, unit):
         """
-        lenght is a number (float or decimal) representing the initial lenght 
+        length is a number (float or decimal) representing the initial length 
         unit is the of initial value ex : 'm', 'meter', 'yd'... depend on registered unit_converters
         """
         initial_unit_converter = self._get_unit_converter(unit)
         #check if the unit is know
         if initial_unit_converter:
             self.intial_unit = unit
-            #store the initial lenght in meter
-            self.intial_lenght = initial_unit_converter.to_meter(lenght)
+            #store the initial length in meter
+            self.intial_length = initial_unit_converter.to_meter(length)
         return None
         
     def convert_to_unit(self, short_unit_name, as_string=False):
         """
-        convert the intial_lenght value into the given short unit
+        convert the intial_length value into the given short unit
         if as_string is True, a string is return containing the converted value + the unit name
         """
         #get the unit converter registered for the short_unit_name
         unit_converter = self._get_unit_converter(short_unit_name)
         if unit_converter:
-            result = unit_converter.from_meter(self.intial_lenght)
+            result = unit_converter.from_meter(self.intial_length)
             if as_string:
-                return "%g %s" % (result, short_unit_name)
+                #use the decimal and the %g to print the result user friendly
+                decimal_result = decimal.Decimal(result).quantize(decimal.Decimal('0.1'), rounding=decimal.ROUND_UP)
+                return "%g %s" % (decimal_result, short_unit_name)
             return result
         return None
+    
+    def convert(self, string_to_convert, target_unit, as_string=False):
+        """
+        hight level methode:
+        string_to_convert : a string with number and short unit name like '2.4yd'
+        target_unit : a short unit name like 'in'
+        as_string : if True the method return an human readable string else return a float 
+        """
+        m = re.match(PARSE_INPUT_PATTERN, string_to_convert)
+        #parse the original value to get the number and the original unit
+        original_length = float(m.group(1)) 
+        original_unit = m.group(2)
+        #set the value in the convert 
+        self.set_value(original_length, original_unit)
+        return self.convert_to_unit(target_unit, as_string=as_string)
 
-PARSE_INPUT_PATTERN = '([-+]?[0-9]*\.?[0-9]*)([a-z]*)'
 if __name__ == "__main__":
     try:
         #parse the options
@@ -111,25 +122,14 @@ if __name__ == "__main__":
         parser.add_option("-u", "--unit", dest="trg_unit",
             help="the target unit ex: 'm'", default="m")
         parser.add_option("-t", "--tidy", dest="tidy", action="store_true",
-            help="tidy the converted output", default=False)
-            
+            help="print the result user friendly (rounded and with unit)", default=False)
         (options, args) = parser.parse_args()
         original_value_to_convert = options.value
         target_unit = options.trg_unit
         tidy = options.tidy
-        
         #create a converter instance
         converter = Converter()
-        #parse the original value to get the number and the original unit
-        m = re.match(PARSE_INPUT_PATTERN, original_value_to_convert)
-        original_lenght = float(m.group(1)) 
-        original_unit = m.group(2)
-        
-        #set the value in the convert 
-        converter.set_value(original_lenght, original_unit)
-        
-        #then print the value 
-        print converter.convert_to_unit(target_unit, as_string=tidy)
-        
+        #then convert
+        print converter.convert(original_value_to_convert, target_unit, tidy)
     except (KeyboardInterrupt, SystemExit):
         sys.exit()

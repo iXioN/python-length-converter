@@ -1,6 +1,6 @@
 # !/usr/bin/env python
 #  unit_converters.py
-#  python-lenght-converter
+#  python-length-converter
 #  
 #  Created by Antonin Lacombe on 2013-04-16.
 #  Copyright 2013 Antonin Lacombe. All rights reserved.
@@ -9,7 +9,6 @@
 class BaseUnitConverter(object):
     """A base unit converter class"""
     short_unit = ""
-    full_unit = short_unit #default full_unit = short_unit, implementation can override 
     convert_ratio = 1 #the convert ratio to meter
     
     def to_meter(self, value):
@@ -42,8 +41,7 @@ class YardConverter(BaseUnitConverter):
     The yard converter
     """
     short_unit = "yd"
-    full_unit = "yard"
-    convert_ratio = 1.0936133
+    convert_ratio = 1.093613
 
 
 class InchConverter(BaseUnitConverter):
@@ -51,5 +49,4 @@ class InchConverter(BaseUnitConverter):
     The inch converter
     """
     short_unit = "in"
-    full_unit = "inche"    
-    convert_ratio = 39.3700787
+    convert_ratio = 39.370078

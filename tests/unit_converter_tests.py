@@ -1,6 +1,6 @@
 # !/usr/bin/env python
 #  unit_converter_tests.py
-#  python-lenght-converter
+#  python-length-converter
 #  
 #  Created by Antonin Lacombe on 2013-04-16.
 #  Copyright 2013 Antonin Lacombe. All rights reserved.
@@ -8,6 +8,7 @@
 
 import unittest
 from unit_converters import MeterConverter, YardConverter, InchConverter
+
 class UnitConverterTestCase(unittest.TestCase):    
     #Meter converter tests
     def test_meter_convert_to_meter(self):
@@ -55,11 +56,11 @@ class UnitConverterTestCase(unittest.TestCase):
         """
         unit_converter = YardConverter()
         value_to_convert = 2
-        expected_converted_value = 2.1872266
+        expected_converted_value = 2.1872
         converted_value = unit_converter.from_meter(value_to_convert)
         self.assertAlmostEqual(converted_value, expected_converted_value, places=4)
     
-    #inche converter tests
+    #inch converter tests
     def test_inch_convert_to_meter(self):
         """
         given a inch converter
@@ -80,6 +81,6 @@ class UnitConverterTestCase(unittest.TestCase):
         """
         unit_converter = InchConverter()
         value_to_convert = 3
-        expected_converted_value = 118.110236
+        expected_converted_value = 118.1102
         converted_value = unit_converter.from_meter(value_to_convert)
         self.assertAlmostEqual(converted_value, expected_converted_value, places=4)

@@ -1,6 +1,6 @@
 # 
 #  test_cases.py
-#  python-lenght-converter
+#  python-length-converter
 #  
 #  Created by Antonin Lacombe on 2013-04-16.
 #  Copyright 2013 Antonin Lacombe. All rights reserved.
