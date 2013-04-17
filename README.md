@@ -1,8 +1,8 @@
 python-length-converter
 =======================
 the goal is to implement a simple library that converts lengths in different units. For example:
-    * 6m to yard = 6.562yd 
-    * 2.5yd to inch = 90in
+* 6m to yard = 6.562yd 
+* 2.5yd to inch = 90in
 
 The units to be supported are: metre (m), yard (yd) and inch (in). You can easily add new units
 
